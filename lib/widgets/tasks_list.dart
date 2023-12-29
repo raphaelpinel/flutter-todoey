@@ -3,11 +3,13 @@ import 'package:todoey_flutter/models/task.dart';
 
 class TasksList extends StatelessWidget {
   const TasksList({
-    super.key,
+    Key? key,
     required this.tasks,
-  });
+    required this.handleCheckboxChange,
+  }) : super(key: key);
 
   final List<Task> tasks;
+  final void Function(Task task, bool? value) handleCheckboxChange;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,9 @@ class TasksList extends StatelessWidget {
             ),
             trailing: Checkbox(
               value: tasks[index].isDone,
-              onChanged: (bool? value) {},
+              onChanged: (bool? value) {
+                handleCheckboxChange(tasks[index], value);
+              },
             ),
           ),
         );
