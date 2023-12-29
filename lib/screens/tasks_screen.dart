@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:todoey_flutter/models/task.dart';
 import 'package:todoey_flutter/widgets/tasks_list.dart';
@@ -17,6 +19,7 @@ class _TasksScreenState extends State<TasksScreen> {
   ];
 
   late TextEditingController taskController;
+  var isEditingTask = false;
 
   @override
   void initState() {
@@ -41,6 +44,25 @@ class _TasksScreenState extends State<TasksScreen> {
   void _checkTask(Task task, bool? value) {
     setState(() {
       task.toggleDone();
+    });
+  }
+
+  void _editTaskName(Task task, String newTaskName) {
+    setState(() {
+      isEditingTask = true;
+      task.name = newTaskName;
+    });
+  }
+
+  void _startEditing() {
+    setState(() {
+      isEditingTask = true;
+    });
+  }
+
+  void _endEditing() {
+    setState(() {
+      isEditingTask = false;
     });
   }
 
@@ -191,22 +213,29 @@ class _TasksScreenState extends State<TasksScreen> {
                     topRight: Radius.circular(20.0),
                   ),
                 ),
-                child:
-                    TasksList(tasks: tasks, handleCheckboxChange: _checkTask),
+              child: TasksList(
+                  tasks: tasks,
+                  handleCheckboxChange: _checkTask,
+                  handleEditTaskName: _editTaskName,
+                  startEditing: _startEditing,
+                  endEditing: _endEditing),
               ),
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.lightBlueAccent,
-          shape: const CircleBorder(),
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            _openAddTaskModal(context);
-          },
-        ));
+      floatingActionButton: isEditingTask
+          ? null
+          : FloatingActionButton(
+              backgroundColor: Colors.lightBlueAccent,
+              shape: const CircleBorder(),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                _openAddTaskModal(context);
+              },
+            ),
+    );
   }
 }

@@ -6,10 +6,16 @@ class TasksList extends StatelessWidget {
     Key? key,
     required this.tasks,
     required this.handleCheckboxChange,
+    required this.handleEditTaskName,
+    required this.startEditing,
+    required this.endEditing,
   }) : super(key: key);
 
   final List<Task> tasks;
   final void Function(Task task, bool? value) handleCheckboxChange;
+  final void Function(Task task, String newTaskName) handleEditTaskName;
+  final void Function() startEditing;
+  final void Function() endEditing;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +26,21 @@ class TasksList extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 0.0),
           child: ListTile(
-            title: Text(
-              tasks[index].name,
-              style: const TextStyle(fontSize: 18.0),
+            title: GestureDetector(
+              child: TextFormField(
+                onTap: () {
+                  startEditing();
+                },
+                initialValue: tasks[index].name,
+                style: const TextStyle(fontSize: 18.0),
+                decoration: const InputDecoration(border: InputBorder.none),
+                onChanged: (value) {
+                  handleEditTaskName(tasks[index], value);
+                },
+                onFieldSubmitted: (value) {
+                  endEditing();
+                },
+              ),
             ),
             trailing: Checkbox(
               value: tasks[index].isDone,
