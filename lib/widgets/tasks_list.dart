@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todoey_flutter/models/task.dart';
+import 'package:todoey_flutter/widgets/task_tile.dart';
 
 class TasksList extends StatelessWidget {
   const TasksList({
@@ -25,30 +26,13 @@ class TasksList extends StatelessWidget {
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 0.0),
-          child: ListTile(
-            title: GestureDetector(
-              child: TextFormField(
-                onTap: () {
-                  startEditing();
-                },
-                initialValue: tasks[index].name,
-                style: const TextStyle(fontSize: 18.0),
-                decoration: const InputDecoration(border: InputBorder.none),
-                onChanged: (value) {
-                  handleEditTaskName(tasks[index], value);
-                },
-                onFieldSubmitted: (value) {
-                  endEditing();
-                },
-              ),
-            ),
-            trailing: Checkbox(
-              value: tasks[index].isDone,
-              onChanged: (bool? value) {
-                handleCheckboxChange(tasks[index], value);
-              },
-            ),
-          ),
+            child: TaskTile(
+              task: tasks[index],
+              handleCheckboxChange: handleCheckboxChange,
+              handleEditTaskName: handleEditTaskName,
+              startEditing: startEditing,
+              endEditing: endEditing,
+            )
         );
       },
     );
