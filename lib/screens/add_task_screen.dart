@@ -62,14 +62,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             const SizedBox(height: 35.0),
             ElevatedButton(
               onPressed: () {
-                // Add task logic here (if needed separately)
-                // This is for the button to close the modal without adding the task
                 widget.addTask(widget.taskController.text);
                 Navigator.pop(context);
                 widget.taskController.clear();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.lightBlueAccent,
+                backgroundColor: Colors.lightBlueAccent, 
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(0.0)),
                 ),
