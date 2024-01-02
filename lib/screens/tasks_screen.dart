@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todoey_flutter/models/task.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey_flutter/models/task_data.dart';
 import 'package:todoey_flutter/screens/add_task_screen.dart';
 import 'package:todoey_flutter/widgets/tasks_list.dart';
 
@@ -11,13 +12,7 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-  final List<Task> tasks = [
-    Task(name: 'Buy milk', isDone: true),
-    Task(name: 'Buy eggs', isDone: true),
-    Task(name: 'Buy bread', isDone: false),
-  ];
 
-  var isEditingTask = false;
   late TextEditingController taskController;
 
   @override
@@ -35,32 +30,7 @@ class _TasksScreenState extends State<TasksScreen> {
   void _addTask(String newTaskTitle) {
     if (newTaskTitle.isEmpty) return;
     setState(() {
-      tasks.add(Task(name: newTaskTitle));
-    });
-  }
-
-  void _checkTask(Task task, bool? value) {
-    setState(() {
-      task.toggleDone();
-    });
-  }
-
-  void _editTaskName(Task task, String newTaskName) {
-    setState(() {
-      isEditingTask = true;
-      task.name = newTaskName;
-    });
-  }
-
-  void _startEditing() {
-    setState(() {
-      isEditingTask = true;
-    });
-  }
-
-  void _endEditing() {
-    setState(() {
-      isEditingTask = false;
+      Provider.of<TaskData>(context, listen: false).addTask(newTaskTitle);
     });
   }
 
@@ -81,6 +51,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final taskData = Provider.of<TaskData>(context);
     return Scaffold(
       backgroundColor: Colors.lightBlueAccent,
       body: Column(
@@ -110,7 +81,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   ),
                 ),
                 Text(
-                  '${tasks.length} tasks',
+                  '${taskData.taskCount} tasks',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -129,17 +100,12 @@ class _TasksScreenState extends State<TasksScreen> {
                   topRight: Radius.circular(20.0),
                 ),
               ),
-              child: TasksList(
-                  tasks: tasks,
-                  handleCheckboxChange: _checkTask,
-                  handleEditTaskName: _editTaskName,
-                  startEditing: _startEditing,
-                  endEditing: _endEditing),
+              child: const TasksList(),
             ),
           ),
         ],
       ),
-      floatingActionButton: isEditingTask
+      floatingActionButton: Provider.of<TaskData>(context).isEditing
           ? null
           : FloatingActionButton(
               backgroundColor: Colors.lightBlueAccent,
