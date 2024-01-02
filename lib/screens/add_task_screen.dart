@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey_flutter/models/task_data.dart';
 
-class AddTaskScreen extends StatefulWidget {
-  const AddTaskScreen(
-      {super.key, required this.addTask, required this.taskController});
-  final void Function(String) addTask;
-  final TextEditingController taskController;
+class AddTaskScreen extends StatelessWidget {
+  AddTaskScreen({super.key});
+  final TextEditingController taskController = TextEditingController();
 
-  @override
-  State<AddTaskScreen> createState() => _AddTaskScreenState();
-}
-
-class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -51,7 +46,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
               child: TextField(
                 autofocus: true,
-                controller: widget.taskController,
+                controller: taskController,
                 style: const TextStyle(fontSize: 18.0),
                 decoration: const InputDecoration(
                   border: InputBorder.none,
@@ -62,12 +57,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             const SizedBox(height: 35.0),
             ElevatedButton(
               onPressed: () {
-                widget.addTask(widget.taskController.text);
+                Provider.of<TaskData>(context, listen: false)
+                    .addTask(taskController.text);
                 Navigator.pop(context);
-                widget.taskController.clear();
+                taskController.clear();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.lightBlueAccent, 
+                backgroundColor: Colors.lightBlueAccent,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(0.0)),
                 ),

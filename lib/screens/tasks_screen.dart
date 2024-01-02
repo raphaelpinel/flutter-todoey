@@ -4,35 +4,8 @@ import 'package:todoey_flutter/models/task_data.dart';
 import 'package:todoey_flutter/screens/add_task_screen.dart';
 import 'package:todoey_flutter/widgets/tasks_list.dart';
 
-class TasksScreen extends StatefulWidget {
+class TasksScreen extends StatelessWidget {
   const TasksScreen({super.key});
-
-  @override
-  State<TasksScreen> createState() => _TasksScreenState();
-}
-
-class _TasksScreenState extends State<TasksScreen> {
-
-  late TextEditingController taskController;
-
-  @override
-  void initState() {
-    super.initState();
-    taskController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    taskController.dispose();
-    super.dispose();
-  }
-
-  void _addTask(String newTaskTitle) {
-    if (newTaskTitle.isEmpty) return;
-    setState(() {
-      Provider.of<TaskData>(context, listen: false).addTask(newTaskTitle);
-    });
-  }
 
   void _openAddTaskModal(BuildContext context) {
     showModalBottomSheet(
@@ -41,12 +14,9 @@ class _TasksScreenState extends State<TasksScreen> {
       barrierColor: Colors.grey[300]!.withOpacity(0.7),
       context: context,
       builder: (BuildContext context) {
-        return AddTaskScreen(
-          addTask: _addTask,
-          taskController: taskController,
-        );
+        return AddTaskScreen();
       },
-    ).whenComplete(() => taskController.clear());
+    );
   }
 
   @override
